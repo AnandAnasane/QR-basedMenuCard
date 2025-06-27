@@ -1,3 +1,14 @@
+/* Menu Navbar  */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+
 .btn-outline-orange {
   color: #f26522;
   border: 1px solid #f26522;
@@ -12,3 +23,5 @@
 .text-orange {
   color: #f26522 !important;
 }
+
+
