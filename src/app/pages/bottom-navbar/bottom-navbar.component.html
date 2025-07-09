@@ -1,0 +1,21 @@
+<!-- Bottom Navbar -->
+<nav class="navbar fixed-bottom navbar-light bg-white border-top">
+  <div class="container-fluid justify-content-around">
+    <a class="nav-link text-center" routerLink="/home" routerLinkActive="text-orange"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <i class="fas fa-home"></i><br><small>Home</small>
+    </a>
+    <a class="nav-link text-center" routerLink="/menu" routerLinkActive="text-orange"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <i class="fas fa-utensils"></i><br><small>Menu</small>
+    </a>
+    <a class="nav-link text-center" routerLink="/order" routerLinkActive="text-orange"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <i class="fas fa-clipboard-list"></i><br><small>Orders</small>
+    </a>
+    <a class="nav-link text-center" routerLink="/paybills" routerLinkActive="text-orange"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <i class="fas fa-receipt"></i><br><small>Pay Bill</small>
+    </a>
+  </div>
+</nav>

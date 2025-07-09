@@ -6,11 +6,19 @@ import { PayBillsComponent } from './pages/pay-bills/pay-bills.component';
 
 export const routes: Routes = [
 
-    {
-        path: '', 
-        component: HomeComponent
-    },
-    {   path: 'menu', component: MenuComponent },
-    {   path: 'order', component: OrdersComponent},
-    {   path: 'paybills', component: PayBillsComponent}
+
+    { path: '', component: HomeComponent }, 
+    { path: 'menu', component: MenuComponent },
+    { path: 'order', component: OrdersComponent },
+    { path: 'paybills', component: PayBillsComponent },
+    { path: '**', redirectTo: '' } 
+
+    // {
+    //     path: '', 
+    //     component: HomeComponent
+    // },
+    // {   path: 'home', component: HomeComponent},
+    // {   path: 'menu', component: MenuComponent },
+    // {   path: 'order', component: OrdersComponent},
+    // {   path: 'paybills', component: PayBillsComponent}
 ];

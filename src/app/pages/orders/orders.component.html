@@ -1,47 +1,14 @@
 <!-- Page Container -->
 <div class="container-fluid px-0">
 
-  <!-- Header -->
-  <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-    <div class="d-flex align-items-center">
-      <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png" alt="Logo" style="max-width: 40px;" class="me-2">
-      <h6 class="mb-0">The LakeView</h6>
-    </div>
-    <div class="bg-light px-2 py-1 rounded small">T-1</div>
-  </div>
-
-  <!-- Search -->
-  <div class="p-3 border-bottom">
-    <input type="text" class="form-control" placeholder="Search item">
-  </div>
-
-  <!-- Category Menu -->
-  <div class="d-flex overflow-auto px-3 py-2 border-bottom">
-    <div class="text-center me-3">
-      <div class="border rounded-circle p-2 mb-1">
-        <i class="fas fa-hat-chef"></i>
-      </div>
-      <small>Chef Special</small>
-    </div>
-    <div class="text-center me-3">
-      <img src="https://via.placeholder.com/50" class="rounded-circle mb-1" alt="Turkish Food">
-      <small>Turkish Food</small>
-    </div>
-    <div class="text-center me-3">
-      <img src="https://via.placeholder.com/50" class="rounded-circle mb-1" alt="Soup">
-      <small>Soup</small>
-    </div>
-    <div class="text-center me-3">
-      <img src="https://via.placeholder.com/50" class="rounded-circle mb-1" alt="Sushi">
-      <small>Sushi</small>
-    </div>
-  </div>
-
+  <app-top-navbar></app-top-navbar>
+ 
+ 
   <!-- Menu Section -->
-  <div class="p-3">
+  <!-- <div class="p-3">
     <h6>Chef Special (3)</h6>
 
-    <!-- Menu Item -->
+   
     <div class="d-flex justify-content-between align-items-center border-bottom py-2">
       <div>
         <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
@@ -53,7 +20,6 @@
       </div>
     </div>
 
-    <!-- Menu Item -->
     <div class="d-flex justify-content-between align-items-center border-bottom py-2">
       <div>
         <h6 class="mb-1">Burrata & Basil Pide</h6>
@@ -65,7 +31,7 @@
       </div>
     </div>
 
-    <!-- Menu Item -->
+
     <div class="d-flex justify-content-between align-items-center py-2">
       <div>
         <h6 class="mb-1">Asian Pan Fried Cheese Bao</h6>
@@ -77,16 +43,8 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
 
-  <!-- Bottom Navbar -->
-  <nav class="navbar fixed-bottom navbar-light bg-white border-top">
-    <div class="container-fluid justify-content-around">
-      <a class="nav-link text-center" href="#"><i class="fas fa-home"></i><br><small>Home</small></a>
-      <a class="nav-link text-center active text-orange" href="#"><i class="fas fa-utensils"></i><br><small>Menu</small></a>
-      <a class="nav-link text-center" href="#"><i class="fas fa-clipboard-list"></i><br><small>Orders</small></a>
-      <a class="nav-link text-center" href="#"><i class="fas fa-receipt"></i><br><small>Pay Bill</small></a>
-    </div>
-  </nav>
 
+   <app-bottom-navbar></app-bottom-navbar>
 </div>

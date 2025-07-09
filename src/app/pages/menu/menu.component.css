@@ -1,27 +1,25 @@
-/* Menu Navbar  */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
 
 
-.btn-outline-orange {
-  color: #f26522;
-  border: 1px solid #f26522;
-  border-radius: 6px;
+/* Accordian */
+.accordion-button {
+  background-color: transparent !important; 
+  color: inherit;
+}
+.accordion-button:not(.collapsed) {
+  background-color: transparent !important; 
+  box-shadow: none; 
+}
+.accordion-button:focus {
+  box-shadow: none; 
+}
+.accordion-button:hover {
+  background-color: transparent !important;
 }
 
-.btn-outline-orange:hover {
-  background-color: #f26522;
-  color: white;
-}
 
 .text-orange {
-  color: #f26522 !important;
+  color: orange !important;
 }
+
 
 
