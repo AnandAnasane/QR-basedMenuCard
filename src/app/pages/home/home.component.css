@@ -10,3 +10,10 @@
   background-color: #d4571e;
   color: #fff;
 }
+
+
+.bg-card {
+  background-image: url('/public/assets/bg3.jpg');
+  background-size: cover;
+  background-position: center;
+}
