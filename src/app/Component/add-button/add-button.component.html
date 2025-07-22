@@ -1,4 +1,47 @@
 <div class="position-relative">
+  <ng-container *ngIf="quantity === 0; else quantityCounter">
+    <button (click)="addItem()" class="btn btn-outline-orange bg-light btn-sm position-absolute fs-6"
+      style="bottom: -1px; left: 50%; transform: translateX(-50%); z-index: 2; min-width: 90px; white-space: nowrap; padding: 0 12px;">
+      + Add
+    </button>
+  </ng-container>
+
+  <ng-template #quantityCounter>
+    <div
+      class="d-flex align-items-center justify-content-between bg-light border border-orange rounded position-absolute"
+      style="bottom: -1px; left: 50%; transform: translateX(-50%); z-index: 2; min-width: 90px; padding: 2px 6px;">
+      <button (click)="decreaseQty()" class="btn btn-outline-orange border btn-sm px-2 py-0">-</button>
+      <span class="text-orange">{{ quantity }}</span>
+      <button (click)="increaseQty()" class="btn btn-outline-orange border btn-sm px-2 py-0">+</button>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Go to Cart Button -->
+<ng-container *ngIf="showGoToCartButton">
+  <div class="position-fixed start-50 translate-middle-x px-3" style="bottom: 80px; z-index: 999;">
+    <button routerLink="/cart" class="btn btn-outline-orange bg-light btn-lg shadow" style=" border-radius: 12px;">
+      Go to Cart <i class="fas fa-arrow-right ms-2"></i>
+    </button>
+  </div>
+</ng-container>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="position-relative">
     <ng-container *ngIf="quantity === 0; else quantityCounter">
         <button (click)="addItem()" class="btn btn-outline-orange bg-light btn-sm position-absolute fs-6"
             style="bottom: -1px; left: 50%; transform: translateX(-50%); z-index: 2; min-width: 90px; white-space: nowrap; padding: 0 12px;">
@@ -13,4 +56,15 @@
             <button (click)="increaseQty()" class="btn btn-outline-orange border btn-sm px-2 py-0">+</button>
         </div>
     </ng-template>
-</div>
+</div> -->
+
+
+
+
+
+
+
+
+
+
+
