@@ -1,14 +1,27 @@
-<!-- Search -->
-<div class="p-3 border-bottom">
+<!-- Search Dropdown -->
+<div class="p-3 border-bottom position-relative">
   <div class="input-group">
     <span class="input-group-text">
       <i class="fa fa-search"></i>
     </span>
-    <input type="text" [(ngModel)]="searchTerm" class="form-control" placeholder="Search item">
+    <input type="text" #searchInput [(ngModel)]="searchText" class="form-control" placeholder="Search item"
+           (keydown)="onKeyDown($event)">
   </div>
+
+  <!-- Dropdown menu -->
+  <ul *ngIf="searchText" class="list-group position-absolute " style="z-index: 1000; max-height: 200px ;width:15rem; overflow-y: auto;">
+    <li *ngFor="let item of filteredItems(); let i = index"
+        [class.active]="i === selectedIndex"
+        class="list-group-item"
+        (click)="selectItem(item)">
+      {{ item }}
+    </li>
+
+    <li *ngIf="filteredItems().length === 0" class="list-group-item text-muted">
+      No results found.
+    </li>
+  </ul>
 </div>
-
-
 
 
 <!-- Category Menu (Navigation bar of Menu Category) -->

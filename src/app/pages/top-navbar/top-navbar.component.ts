@@ -10,24 +10,49 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './top-navbar.component.css'
 })
 export class TopNavbarComponent {
+  searchText: string = '';
+  selectedIndex: number = -1;
 
-   searchTerm: string = '';
-
-  items = [
-    { name: 'Apple' },
-    { name: 'Orange' },
-    { name: 'Banana' },
-    { name: 'Mango' },
+  items: string[] = [
+    'Turkish Food', 'Soup', 'Sushi', 'Asian Starters', 'Coffee', 'Tea', 'Hot Chocolate',
+    'Cold Coffee', 'Cold Brew', 'Shakes', 'Mocktails', 'Lemonades', 'Iced Green Teas',
+    'Burgers', 'Sandwiches', 'Turkish Pide', 'Wood Fire Pizza', 'Italian Pastas',
+    'Main Course', 'Chinese Appetizers', 'Bao', 'Thai', 'Noodles', 'Rice', 'Sizzlers',
+    'Healthy', 'Salad', 'Dessert', 'Beverages', 'Maggie'
   ];
 
-  filteredItems() {
-    if (!this.searchTerm) {
-      return this.items;
-    }
-
+  filteredItems(): string[] {
     return this.items.filter(item =>
-      item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      item.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    const filtered = this.filteredItems();
+    if (event.key === 'ArrowDown') {
+      if (this.selectedIndex < filtered.length - 1) {
+        this.selectedIndex++;
+      }
+      event.preventDefault();
+    } else if (event.key === 'ArrowUp') {
+      if (this.selectedIndex > 0) {
+        this.selectedIndex--;
+      }
+      event.preventDefault();
+    } else if (event.key === 'Enter') {
+      if (this.selectedIndex >= 0 && this.selectedIndex < filtered.length) {
+        this.selectItem(filtered[this.selectedIndex]);
+      }
+      event.preventDefault();
+    } else {
+      this.selectedIndex = -1; // reset on other keypress
+    }
+  }
+
+  selectItem(item: string) {
+    this.searchText = item;
+    this.selectedIndex = -1;
+    // Perform any additional actions after selection
+    console.log('Selected:', item);
+  }
 }
