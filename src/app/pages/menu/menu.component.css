@@ -16,24 +16,78 @@
 
 
 /* Accordian */
-.accordion-button {
-  background-color: transparent !important; 
-  color: inherit;
-}
-.accordion-button:not(.collapsed) {
-  background-color: transparent !important; 
-  box-shadow: none; 
-}
-.accordion-button:focus {
-  box-shadow: none; 
-}
-.accordion-button:hover {
-  background-color: transparent !important;
+/* Category card */
+.menu-category {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
+/* Header button styling */
+.menu-category-header {
+  font-size: 1.1rem;
+  padding: 1rem;
+  border: none;
+  color: #333;
+}
 
-.text-orange {
-  color: orange !important;
+.menu-category-header.collapsed {
+  background-color: #fff;
+}
+
+.menu-category-header:not(.collapsed) {
+  background-color: #fffbf7;
+  color: #ff7f50;
+  border-bottom: 1px solid #ffe5d1;
+}
+
+.menu-category-header:focus {
+  box-shadow: none;
+}
+
+/* Accordion icon color */
+.menu-category-header::after {
+  filter: brightness(0.4);
+}
+
+/* Badge styling */
+.badge.bg-orange {
+  background-color: #ff7f50;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+}
+
+/* Item image styling */
+.menu-item-img {
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.menu-item-img:hover {
+  transform: scale(1.05);
+}
+
+/* Accordion body light background */
+.accordion-body {
+  background-color: #fafafa;
+}
+
+/* Item text */
+h6 {
+  color: #333;
+}
+
+.text-muted {
+  font-size: 0.9rem;
+}
+
+/* Border between items */
+.border-bottom {
+  border-color: #eee !important;
 }
 
 

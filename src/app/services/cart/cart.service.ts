@@ -37,16 +37,17 @@ export class CartService {
   }
 
   decreaseQty(itemId: string) {
-    const currentItems = this.cartItemsSubject.getValue();
-    const item = currentItems.find(i => i.id === itemId);
-    if (item) {
-      item.quantity -= 1;
-      if (item.quantity <= 0) {
-        this.removeItem(itemId);
-      }
+  const currentItems = this.cartItemsSubject.getValue();
+  const item = currentItems.find(i => i.id === itemId);
+  if (item) {
+    item.quantity -= 1;
+    if (item.quantity <= 0) {
+      this.removeItem(itemId);
+      return; 
     }
-    this.cartItemsSubject.next(currentItems);
   }
+  this.cartItemsSubject.next(currentItems);
+}
 
   getItemQuantity(itemId: string): number {
     const currentItems = this.cartItemsSubject.getValue();
@@ -59,4 +60,5 @@ export class CartService {
     const updatedItems = currentItems.filter(item => item.id !== itemId);
     this.cartItemsSubject.next(updatedItems);
   }
+  
 }
