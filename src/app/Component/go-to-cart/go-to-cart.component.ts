@@ -8,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './go-to-cart.component.css'
 })
 export class GoToCartComponent {
+  
 
 }

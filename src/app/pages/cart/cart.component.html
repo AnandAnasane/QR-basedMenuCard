@@ -1,14 +1,51 @@
-<div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-    <a routerLink="/home" class="text-decoration-none text-dark">
-        <div class="d-flex align-items-center">
-            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                alt="Logo" style="max-width: 40px;" class="me-2 rounded">
-            <h6 class="mb-0">The LakeView</h6>
-        </div>
+<app-heading></app-heading>
+
+<div class="container my-4">
+  <h4 class="mb-3">Your Cart</h4>
+
+  <!-- Back to Menu button -->
+  <div class="mb-3">
+    <a routerLink="/menu" class="btn btn-outline-secondary">
+      ← Back to Menu
     </a>
+  </div>
 
-    <div class="bg-light px-2 py-1 rounded small shadow"> <i class="fa fa-table"></i> T-1</div>
+  <div *ngIf="cartItems.length === 0" class="text-center py-5">
+    <p>Your cart is empty.</p>
+  </div>
+
+  <div *ngIf="cartItems.length > 0">
+    <div *ngFor="let item of cartItems" class="d-flex justify-content-between align-items-center border-bottom py-3">
+      <div class="d-flex align-items-center">
+        <img 
+          [src]="item.image || 'assets/default-image.png'" 
+          alt="{{ item.name }}" 
+          class="rounded" 
+          style="width: 60px; height: 60px; object-fit: cover;">
+        <div class="ms-3">
+          <h6 class="mb-1">{{ item.name }}</h6>
+          <p class="mb-0">₹{{ item.price || 0 }}</p>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <button (click)="decreaseQty(item)" class="btn btn-outline-orange border btn-sm px-2 py-0">-</button>
+        <span class="mx-2">{{ item.quantity }}</span>
+        <button (click)="increaseQty(item)" class="btn btn-outline-orange border btn-sm px-2 py-0">+</button>
+      </div>
+
+      <div>
+        ₹{{ (item.price * item.quantity) || 0 }}
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <h5>Total:</h5>
+      <h5>₹{{ totalPrice }}</h5>
+    </div>
+
+    <div class="mt-3 text-end">
+      <button class="btn btn-orange">Proceed to Checkout</button>
+    </div>
+  </div>
 </div>
-
-
-<p>This is cart component</p>

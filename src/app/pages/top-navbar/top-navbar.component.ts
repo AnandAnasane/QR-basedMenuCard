@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CategoryService } from '../../services/category/category.service';
 
 @Component({
   selector: 'app-top-navbar',
@@ -9,7 +10,29 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './top-navbar.component.html',
   styleUrl: './top-navbar.component.css'
 })
-export class TopNavbarComponent {
+export class TopNavbarComponent implements OnInit {
+
+  categories: any [] = [];
+  
+  // For navbar Menu Section
+
+  constructor(private categoryService : CategoryService){
+    
+  }
+
+
+  ngOnInit(): void {
+    this.categories = this.categoryService.getCaregory();
+    
+  }
+
+
+
+ 
+ 
+ 
+ 
+//  For Search Input 
   searchText: string = '';
   selectedIndex: number = -1;
 
@@ -45,14 +68,13 @@ export class TopNavbarComponent {
       }
       event.preventDefault();
     } else {
-      this.selectedIndex = -1; // reset on other keypress
+      this.selectedIndex = -1; 
     }
   }
 
   selectItem(item: string) {
     this.searchText = item;
     this.selectedIndex = -1;
-    // Perform any additional actions after selection
     console.log('Selected:', item);
   }
 }
