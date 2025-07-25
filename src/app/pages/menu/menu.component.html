@@ -5,115 +5,36 @@
   <app-top-navbar></app-top-navbar>
 
   <!-- Menu Section -->
-  <div class="accordion" id="foodMenuAccordion">
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="headingTurkish">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTurkish"
-          aria-expanded="true" aria-controls="collapseTurkish">
-          Turkish Food (5)
-        </button>
-      </h2>
-      <div id="collapseTurkish" class="accordion-collapse collapse show" aria-labelledby="headingTurkish"
-        data-bs-parent="#foodMenuAccordion">
-        <div class="accordion-body p-0">
-          <div class="p-3">
-            <!-- Menu Item -->
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
+   <div class="accordion" id="foodMenuAccordion">
+  <div class="accordion-item" *ngFor="let category of menuData; let i = index">
+    <h2 class="accordion-header" [id]="'heading' + i">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+        [attr.data-bs-target]="'#collapse' + i" aria-expanded="false" [attr.aria-controls]="'collapse' + i">
+        {{ category.name }} ({{ category.items.length }})
+      </button>
+    </h2>
+
+    <div [id]="'collapse' + i" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading' + i"
+      data-bs-parent="#foodMenuAccordion">
+      <div class="accordion-body p-0">
+        <div class="p-3">
+          <div *ngFor="let item of category.items" class="d-flex justify-content-between align-items-center border-bottom py-2">
+            <div>
+              <h6 class="mb-1">{{ item.name }}</h6>
+              <p class="mb-1">₹{{ item.price }}</p>
             </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                 <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                 <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-              <div>
-                <h6 class="mb-1">Tofu In Thai Peanut Sauce</h6>
-                <p class="mb-1">₹299.00</p>
-              </div>
-              <div class="text-end position-relative" style="width: 120px;">
-                <img
-                  src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png"
-                  class="rounded mb-2 w-100" alt="Tofu" style="height: 80px; object-fit: cover;">
-                 <app-add-button></app-add-button>           
-                <!-- Reusable Button Component -->
-              </div>
+            <div class="text-end position-relative" style="width: 120px;">
+              <img [src]="item.image" class="rounded mb-2 w-100" [alt]="item.name" style="height: 80px; object-fit: cover;">
+              <app-add-button [itemId]="item.name" [itemName]="item.name" [itemPrice]="item.price" [itemImage]="item.image"></app-add-button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+  
 
   <app-bottom-navbar></app-bottom-navbar>
 
