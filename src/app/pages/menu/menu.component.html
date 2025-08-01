@@ -6,61 +6,52 @@
 
   <!-- Menu Section -->
   <div class="accordion" id="foodMenuAccordion">
-  <div class="accordion-item menu-category shadow-sm mb-3 rounded-3" *ngFor="let category of menuData; let i = index">
-    
-    <!-- Accordion Header -->
-    <h2 class="accordion-header" [id]="'heading' + i">
-      <button 
-        class="accordion-button menu-category-header bg-white"
-        type="button"
-        data-bs-toggle="collapse"
-        [attr.data-bs-target]="'#collapse' + i"
-        aria-expanded="true"
-        [attr.aria-controls]="'collapse' + i">
-        <span >{{ category.name }}</span>
-        <span class="badge bg-orange ms-2">{{ category.items.length }}</span>
-      </button>
-    </h2>
+    <div class="accordion-item menu-category shadow-sm mb-3 rounded-3" *ngFor="let category of menuData; let i = index"
+      [attr.id]="'section-' + category.name">
 
-    <!-- Accordion Body -->
-    <div 
-      #accordionPanel
-      [id]="'collapse' + i" 
-      class="accordion-collapse collapse show" 
-      [attr.aria-labelledby]="'heading' + i">
-      
-      <div class="accordion-body p-0 bg-light">
-        <div class="p-3">
-          <div *ngFor="let item of category.items" 
-               class="d-flex justify-content-between align-items-center border-bottom py-3">
-            
-            <!-- Item Text -->
-            <div>
-              <h6 class="mb-1 fw-semibold">{{ item.name }}</h6>
-              <p class="mb-1 text-muted">₹{{ item.price }}</p>
-            </div>
+      <!-- Accordion Header -->
+      <h2 class="accordion-header" [id]="'heading' + i">
+        <button class="accordion-button menu-category-header bg-white" type="button" data-bs-toggle="collapse"
+          [attr.data-bs-target]="'#collapse' + i" aria-expanded="true" [attr.aria-controls]="'collapse' + i">
+          <span>{{ category.name }}</span>
+          <span class="badge bg-orange ms-2">{{ category.items.length }}</span>
+        </button>
+      </h2>
 
-            <!-- Item Image and Button -->
-            <div class="text-end position-relative" style="width: 100px;">
-              <img [src]="item.image" class="rounded-3 shadow-sm w-100 mb-2 menu-item-img" [alt]="item.name">
-              <app-add-button 
+      <!-- Accordion Body -->
+      <div #accordionPanel [id]="'collapse' + i" class="accordion-collapse collapse show"
+        [attr.aria-labelledby]="'heading' + i">
+
+        <div class="accordion-body p-0 bg-light">
+          <div class="p-3">
+            <div *ngFor="let item of category.items"
+              class="d-flex justify-content-between align-items-center border-bottom py-3">
+
+              <!-- Item Text -->
+              <div>
+                <h6 class="mb-1 fw-semibold">{{ item.name }}</h6>
+                <p class="mb-1 text-muted">₹{{ item.price }}</p>
+              </div>
+
+              <!-- Item Image and Button -->
+              <div class="text-end position-relative" style="width: 100px;">
+                <img [src]="item.image" class="rounded-3 shadow-sm w-100 mb-2 menu-item-img" [alt]="item.name">
+                <app-add-button 
                 [itemId]="item.name" 
                 [itemName]="item.name" 
                 [itemPrice]="item.price"
-                [itemImage]="item.image">
-              </app-add-button>
+                [itemImage]="item.image"
+                (itemAddedToCart)="onItemAdded()">
+                </app-add-button>
+              </div>
             </div>
-
           </div>
         </div>
       </div>
     </div>
-
   </div>
-</div>
 
-
-
+  <app-cart-model [cartCount]="cartCount"></app-cart-model>
 
 
   <app-bottom-navbar></app-bottom-navbar>

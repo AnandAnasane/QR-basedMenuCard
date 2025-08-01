@@ -1,10 +1,9 @@
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-
-
 export interface CartItem {
-  id: string;    // unique id (item name or backend id)
+  id: string;
   name: string;
   price: number;
   quantity: number;
@@ -18,6 +17,9 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItemsSubject.asObservable();
 
+  private cartNotEmptySubject = new BehaviorSubject<boolean>(false);
+  cartNotEmpty$ = this.cartNotEmptySubject.asObservable(); 
+
   addToCart(item: CartItem) {
     const currentItems = this.cartItemsSubject.getValue();
     const existingItem = currentItems.find(i => i.id === item.id);
@@ -27,6 +29,7 @@ export class CartService {
       currentItems.push({ ...item, quantity: 1 });
     }
     this.cartItemsSubject.next(currentItems);
+    this.updateCartState(); 
   }
 
   increaseQty(itemId: string) {
@@ -34,20 +37,29 @@ export class CartService {
     const item = currentItems.find(i => i.id === itemId);
     if (item) item.quantity += 1;
     this.cartItemsSubject.next(currentItems);
+    this.updateCartState(); 
   }
 
   decreaseQty(itemId: string) {
-  const currentItems = this.cartItemsSubject.getValue();
-  const item = currentItems.find(i => i.id === itemId);
-  if (item) {
-    item.quantity -= 1;
-    if (item.quantity <= 0) {
-      this.removeItem(itemId);
-      return; 
+    const currentItems = this.cartItemsSubject.getValue();
+    const item = currentItems.find(i => i.id === itemId);
+    if (item) {
+      item.quantity -= 1;
+      if (item.quantity <= 0) {
+        this.removeItem(itemId);
+        return;
+      }
     }
+    this.cartItemsSubject.next(currentItems);
+    this.updateCartState();
   }
-  this.cartItemsSubject.next(currentItems);
-}
+
+  removeItem(itemId: string) {
+    const currentItems = this.cartItemsSubject.getValue();
+    const updatedItems = currentItems.filter(item => item.id !== itemId);
+    this.cartItemsSubject.next(updatedItems);
+    this.updateCartState();
+  }
 
   getItemQuantity(itemId: string): number {
     const currentItems = this.cartItemsSubject.getValue();
@@ -55,10 +67,20 @@ export class CartService {
     return item ? item.quantity : 0;
   }
 
-  removeItem(itemId: string) {
-    const currentItems = this.cartItemsSubject.getValue();
-    const updatedItems = currentItems.filter(item => item.id !== itemId);
-    this.cartItemsSubject.next(updatedItems);
+  getCartItems(): CartItem[] {
+    return this.cartItemsSubject.getValue();
   }
-  
+
+   clearCart(){
+    this.cartItemsSubject.next([]);
+    this.updateCartState();
+  }
+
+  private updateCartState() {
+    const currentItems = this.cartItemsSubject.getValue();
+    this.cartNotEmptySubject.next(currentItems.length > 0);
+  }
+
+ 
 }
+

@@ -44,8 +44,46 @@
       <h5>₹{{ totalPrice }}</h5>
     </div>
 
-    <div class="mt-3 text-end">
+    <!-- place-order.component.html -->
+<div class="mt-3 text-end">
+  <button (click)="openOtpStep()" class="btn btn-orange">Place Order</button>
+</div>
+
+
+    <!-- <div class="mt-3 text-end">
       <button routerLink="/order" class="btn btn-orange">Place Order</button>
+    </div> -->
+  </div>
+</div>
+
+
+
+
+
+
+<!-- OTP Modal -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Mobile Verification</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div *ngIf="!otpSent">
+          <label>Mobile Number</label>
+          <input [(ngModel)]="mobileNumber" class="form-control" type="text" placeholder="Enter mobile number">
+          <button class="btn btn-primary mt-2" (click)="sendOtp()">Send OTP</button>
+        </div>
+
+        <div *ngIf="otpSent">
+          <label>Enter OTP</label>
+          <input [(ngModel)]="otp" class="form-control" type="text" placeholder="Enter OTP">
+          <button class="btn btn-success mt-2" (click)="verifyOtp()">Verify OTP</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+

@@ -1,30 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CartService } from '../../services/cart/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-button',
   standalone: true,
-  imports: [CommonModule, RouterModule, RouterLink],
+  imports: [CommonModule, RouterModule],
   templateUrl: './add-button.component.html',
   styleUrl: './add-button.component.css'
 })
-export class AddButtonComponent {
+export class AddButtonComponent implements OnInit, OnDestroy {
 
   @Input() itemId!: string;
   @Input() itemName!: string;
   @Input() itemPrice!: number;
   @Input() itemImage!: string;
 
+  @Output() itemAddedToCart = new EventEmitter<void>();
+
   quantity = 0;
-  showGoToCartButton = false;
+  private cartSubscription!: Subscription;
 
   constructor(private cartService: CartService) { }
 
   ngOnInit(): void {
     this.quantity = this.cartService.getItemQuantity(this.itemId);
-    this.showGoToCartButton = this.quantity > 0;
+
+    // ✅ Subscribe to cart changes
+    this.cartSubscription = this.cartService.cartItems$.subscribe(() => {
+      this.quantity = this.cartService.getItemQuantity(this.itemId);
+    });
   }
 
   addItem() {
@@ -35,54 +42,22 @@ export class AddButtonComponent {
       image: this.itemImage,
       quantity: 1
     });
-    this.quantity = this.cartService.getItemQuantity(this.itemId);
-    this.showGoToCartButton = true;
+    this.itemAddedToCart.emit();
   }
 
   increaseQty() {
     this.cartService.increaseQty(this.itemId);
-    this.quantity = this.cartService.getItemQuantity(this.itemId);
-    this.showGoToCartButton = true;
   }
 
   decreaseQty() {
     if (this.quantity > 1) {
       this.cartService.decreaseQty(this.itemId);
-      this.quantity = this.cartService.getItemQuantity(this.itemId);
     } else {
       this.cartService.removeItem(this.itemId);
-      this.quantity = 0;
-      this.showGoToCartButton = false;
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.cartSubscription) this.cartSubscription.unsubscribe();
+  }
 }
-
-
-
-  // quantity = 0;
- 
-
-  // constructor() {}
-
-  // addItem() {
-  //   this.quantity = 1;
-  //   this.showGoToCartButton = true;
-  // }
-
-  // increaseQty() {
-  //   this.quantity++;
-  //   this.showGoToCartButton = true;
-  // }
-
-  // decreaseQty() {
-  //   if (this.quantity > 1) {
-  //     this.quantity--;
-  //   } else {
-  //     this.quantity = 0;
-  //     this.showGoToCartButton = false;
-  //   }
-  // }
-
-
-

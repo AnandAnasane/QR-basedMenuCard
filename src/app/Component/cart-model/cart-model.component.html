@@ -1,0 +1,25 @@
+<!-- Bottom Modal -->
+<div class="bottom-modal shadow-lg" *ngIf="isVisible">
+  <div class="d-flex justify-content-between align-items-center p-3">
+    <div style="color: #ff6b00;">
+      <strong>{{ cartCount }} item{{ cartCount > 1 ? 's' : '' }}</strong> added to cart
+    </div>
+    <div class="d-flex gap-2">
+  <button class="btn btn-orange btn-sm" (click)="viewCart()">View Cart</button>
+  <button class="btn btn-close-white" (click)="triggerCloseModal()">✕</button>
+</div>
+  </div>
+</div>
+
+<!-- Custom Confirmation Modal -->
+<div class="modal-backdrop-custom" *ngIf="showConfirmation">
+  <div class="modal-dialog-custom">
+    <div class="modal-content-custom">
+      <p class="mb-3">Are you sure you want to remove item(s) from the cart?</p>
+      <div class="text-end">
+        <button class="btn btn-sm btn-secondary me-2" (click)="cancelRemoveItems()">No</button>
+        <button class="btn btn-sm" style="background-color: #ff6b00; color: white;" (click)="confirmRemoveItems()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>

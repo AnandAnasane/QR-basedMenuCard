@@ -35,12 +35,6 @@
   background-color: #fff;
 }
 
-.menu-category-header:not(.collapsed) {
-  background-color: #fffbf7;
-  color: #ff7f50;
-  border-bottom: 1px solid #ffe5d1;
-}
-
 .menu-category-header:focus {
   box-shadow: none;
 }
