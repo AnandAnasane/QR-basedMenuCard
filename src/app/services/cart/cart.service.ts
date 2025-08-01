@@ -20,6 +20,19 @@ export class CartService {
   private cartNotEmptySubject = new BehaviorSubject<boolean>(false);
   cartNotEmpty$ = this.cartNotEmptySubject.asObservable(); 
 
+   private cartVisibleSubject = new BehaviorSubject<boolean>(false);
+  cartVisible$ = this.cartVisibleSubject.asObservable();
+
+   setCartModalVisible(value: boolean) {
+    this.cartVisibleSubject.next(value);
+    localStorage.setItem('cartModelVisible', value ? '1' : '0')
+  }
+
+  getCurrentVisibility(): boolean {
+    return localStorage.getItem('cartModelVisible') === '1';
+  }
+
+
   addToCart(item: CartItem) {
     const currentItems = this.cartItemsSubject.getValue();
     const existingItem = currentItems.find(i => i.id === item.id);

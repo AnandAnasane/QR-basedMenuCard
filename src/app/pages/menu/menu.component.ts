@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BottomNavbarComponent } from '../bottom-navbar/bottom-navbar.component';
 import { TopNavbarComponent } from '../top-navbar/top-navbar.component';
 import { HeadingComponent } from '../heading/heading.component';
@@ -14,7 +14,11 @@ import { CartService } from '../../services/cart/cart.service';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit  {
+
+  isVisible = false;
+  cartCount = 0;
+
 
   // imageUrl = 'https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3e996923-ea11-4c29-827f-b72b7941d73a.png';
 
@@ -152,7 +156,6 @@ export class MenuComponent {
   @ViewChild(CartModelComponent)
   bottomModal!: CartModelComponent;
 
-  cartCount = 0;
 
   constructor(private cartService: CartService) {
 
@@ -164,6 +167,16 @@ export class MenuComponent {
 
     })
   }
+  
+  ngOnInit(): void {
+
+    this.isVisible = this.cartService.getCurrentVisibility();
+
+    this.cartService.cartVisible$.subscribe( visible => {
+      this.isVisible = visible;
+
+    }); 
+}
 
   onItemAdded() {
     this.bottomModal?.showModal(this.cartCount);

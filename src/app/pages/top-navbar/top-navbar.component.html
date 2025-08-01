@@ -25,15 +25,16 @@
 
 
 <!-- Category Menu (Navigation bar of Menu Category) -->
-<!-- Sticky horizontal scrollable category bar -->
-<div class="d-flex flex-nowrap overflow-auto px-3 py-3 border-bottom bg-white no-scrollbar shadow"
+
+<div class="d-flex flex-nowrap overflow-auto px-3 py-3 bg-light no-scrollbar "
      style="position: sticky; top: 0; z-index: 1030;">
-  <div *ngFor="let category of categories" class="text-center me-3 flex-shrink-0" style="width:80px;">
+  <div *ngFor="let category of categories" class="text-center me-3 flex-shrink-0" style="width:90px;">
     <div class="d-flex flex-column align-items-center">
-      <img [src]="category.image" class="rounded-circle mb-1"
-           [alt]="category.name" style="width:60px; object-fit:cover;">
+      <img [src]="category.image" class="rounded mb-1"
+           [alt]="category.name" style="width:80px; height:60px; object-fit:cover;">
       <small>{{ category.name }}</small>
     </div>
   </div>
 </div>
+
 

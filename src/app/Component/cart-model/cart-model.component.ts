@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService } from '../../services/cart/cart.service';
 
@@ -10,13 +10,19 @@ import { CartService } from '../../services/cart/cart.service';
   templateUrl: './cart-model.component.html',
   styleUrl: './cart-model.component.css'
 })
-export class CartModelComponent {
+export class CartModelComponent implements OnInit {
 
   @Input() cartCount: number = 0;
   isVisible = false;
   showConfirmation = false;
 
   constructor(private router: Router, private cartservice: CartService) {}
+
+    ngOnInit(): void {
+    this.cartservice.cartVisible$.subscribe(visible => {
+      this.isVisible = visible;
+    });
+  }
 
   showModal(count: number) {
     this.cartCount = count;
@@ -25,6 +31,7 @@ export class CartModelComponent {
 
   triggerCloseModal() {
     this.showConfirmation = true;
+    this.cartservice.setCartModalVisible(false);
   }
 
   confirmRemoveItems() {
@@ -39,6 +46,8 @@ export class CartModelComponent {
   }
 
   viewCart() {
+    this.cartservice.setCartModalVisible(true);
     this.router.navigate(['/cart']);
+
   }
 }
