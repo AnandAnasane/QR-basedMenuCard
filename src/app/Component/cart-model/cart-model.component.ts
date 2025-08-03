@@ -24,10 +24,10 @@ export class CartModelComponent implements OnInit {
     });
   }
 
-  showModal(count: number) {
-    this.cartCount = count;
-    if (count > 0) this.isVisible = true;
-  }
+  showModal(cartCount: number) {
+  this.isVisible = true;
+  this.cartservice.setCartModalVisible(true);
+}
 
   triggerCloseModal() {
     this.showConfirmation = true;
