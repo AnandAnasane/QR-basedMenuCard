@@ -170,18 +170,11 @@ export class MenuComponent implements OnInit  {
   
   ngOnInit(): void {
 
-    const wasVisible = this.cartService.getCurrentVisibility();
-  this.isVisible = wasVisible;
+    this.isVisible = this.cartService.getCurrentVisibility();
+    this.cartService.cartVisible$.subscribe( visible => {
+      this.isVisible = visible;
 
-  this.cartService.cartVisible$.subscribe(visible => {
-    this.isVisible = visible;
-  });
-
-  if (wasVisible) {
-    setTimeout(() => {
-      this.bottomModal?.showModal(this.cartCount);
-    }, 0);
-  }
+    }); 
 }
 
   onItemAdded() {

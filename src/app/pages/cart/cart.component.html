@@ -1,9 +1,6 @@
 <div class="container my-4 p-4 rounded shadow bg-white position-relative" style="max-width: 600px;">
-
-  <!-- Close Button (Top Right) -->
-  <button (click)="onClose()" 
-          class="btn position-absolute top-0 end-0 m-3 p-0" 
-          style="background: none; border: none;">
+  <!-- Close Button -->
+  <button (click)="onClose()" class="btn position-absolute top-0 end-0 m-3 p-0" style="background: none; border: none;">
     <span style="font-size: 1.5rem; color: #888;">&times;</span>
   </button>
 
@@ -17,88 +14,99 @@
 
   <!-- Cart Items -->
   <div *ngIf="cartItems.length > 0" class="cart-items">
-    <div *ngFor="let item of cartItems" 
-         class="d-flex justify-content-between align-items-start border-bottom py-3">
-
-      <!-- Left: Item Name & Veg/Non-Veg Dot -->
+    <div *ngFor="let item of cartItems" class="d-flex justify-content-between align-items-start border-bottom py-3">
+      <!-- Item Info -->
       <div class="d-flex align-items-center">
-        <!-- Veg/Non-Veg Indicator (Optional) -->
-        <!-- 
-        <div [ngClass]="{'bg-success': item.isVeg, 'bg-danger': !item.isVeg}" 
-             class="rounded-circle me-2" 
-             style="width: 10px; height: 10px; border: 1px solid #000;"></div>
-        -->
         <div class="ms-1">
           <h6 class="mb-0 fw-semibold">{{ item.name }}</h6>
         </div>
       </div>
 
-      <!-- Right: Quantity Controls & Price -->
+      <!-- Quantity & Price -->
       <div class="text-end">
         <div class="d-flex justify-content-end align-items-center mb-1">
-  <div class="d-flex align-items-center border rounded px-2 py-1" style="gap: 0.5rem;">
-    <button (click)="decreaseQty(item)" 
-            class="btn btn-outline-orange btn-sm px-2 py-0 border-0">
-      −
-    </button>
-    <span class="fw-medium">{{ item.quantity }}</span>
-    <button (click)="increaseQty(item)" 
-            class="btn btn-outline-orange btn-sm px-2 py-0 border-0">
-      +
-    </button>
-  </div>
-</div>
-
+          <div class="d-flex align-items-center border rounded px-2 py-1" style="gap: 0.5rem;">
+            <button (click)="decreaseQty(item)" class="btn btn-outline-orange btn-sm px-2 py-0 border-0">−</button>
+            <span class="fw-medium">{{ item.quantity }}</span>
+            <button (click)="increaseQty(item)" class="btn btn-outline-orange btn-sm px-2 py-0 border-0">+</button>
+          </div>
+        </div>
         <div class="text-muted fw-semibold">
           ₹{{ (item.price * item.quantity) || 0 }}
         </div>
       </div>
     </div>
 
-    <!-- Subtotal & Place Order -->
-    <div class="d-flex justify-content-between align-items-center mt-4 p-3 rounded" 
-         style="background-color: #fff5f0;">
+    <!-- Subtotal -->
+    <div class="d-flex justify-content-between align-items-center mt-4 p-3 rounded" style="background-color: #fff5f0;">
       <div>
         <h6 class="mb-1 text-muted">SUBTOTAL</h6>
         <h5 class="fw-bold mb-0">₹{{ totalPrice }}</h5>
       </div>
-      <button (click)="openOtpStep()" 
-              class="btn fw-semibold" 
-              style="background-color: #fff; color: #ff6b00; border: 1px solid #ff6b00;">
+      <button (click)="openOtpStep()" class="btn fw-semibold" style="background-color: #fff; color: #ff6b00; border: 1px solid #ff6b00;">
         Place Order
       </button>
     </div>
   </div>
 </div>
 
-
-
-
-
-
-
 <!-- OTP Modal -->
-<div class="modal fade" id="otpModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content p-3">
-      <div class="modal-header">
-        <h5 class="modal-title">Mobile Verification</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="otpModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content otp-modal-content p-3">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Customer Verification</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
+        <!-- Firebase reCAPTCHA container -->
+        <div id="recaptcha-container"></div>
+
+        <!-- Step 1: Name + Phone Input -->
         <div *ngIf="!otpSent">
-          <label>Mobile Number</label>
-          <input [(ngModel)]="mobileNumber" class="form-control" type="text" placeholder="Enter mobile number">
-          <button class="btn btn-primary mt-2" (click)="sendOtp()">Send OTP</button>
+          <label class="form-label">Name</label>
+          <input [(ngModel)]="userName" class="form-control mb-2" type="text" placeholder="Enter your name" />
+
+          <label class="form-label">Mobile Number</label>
+          <input [(ngModel)]="mobileNumber" class="form-control mb-2" type="text" placeholder="Mobile Number" />
+
+          <button class="btn btn-orange w-100 mt-2" (click)="sendOtp()">Send OTP</button>
         </div>
 
-        <div *ngIf="otpSent">
-          <label>Enter OTP</label>
-          <input [(ngModel)]="otp" class="form-control" type="text" placeholder="Enter OTP">
-          <button class="btn btn-success mt-2" (click)="verifyOtp()">Verify OTP</button>
+        <!-- Step 2: OTP Verification -->
+        <div *ngIf="otpSent && !isVerified">
+          <div class="alert alert-success p-2 d-flex align-items-center mb-3"
+            style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+            ✅ OTP sent to {{ mobileNumber }}
+          </div>
+
+          <label class="form-label">Enter OTP</label>
+          <input [(ngModel)]="otp" class="form-control mb-2" type="text" placeholder="Enter OTP" />
+
+          <button
+            class="btn w-100 mt-2"
+            [ngClass]="showResend ? 'btn-orange' : 'btn-success'"
+            (click)="showResend ? resendOtp() : verifyOtp()"
+          >
+            {{ showResend ? 'Resend OTP' : 'Verify OTP' }}
+          </button>
+
+          <!-- Countdown Timer -->
+          <div class="text-center text-muted mt-2" *ngIf="!showResend">
+            Resend OTP in {{ countdown < 10 ? '0' + countdown : countdown }}s
+          </div>
+        </div>
+
+        <!-- ✅ Success after verification -->
+        <div *ngIf="isVerified" class="alert alert-success mt-3 text-center">
+          ✅ Phone number verified successfully!
         </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<!-- This div is needed for reCAPTCHA -->
+<div id="recaptcha-container"></div>
