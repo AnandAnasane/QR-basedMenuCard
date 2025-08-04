@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export interface CartItem {
+type: any;
   id: string;
   name: string;
   price: number;

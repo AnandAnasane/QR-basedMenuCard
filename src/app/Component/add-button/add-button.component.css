@@ -13,3 +13,22 @@
 .text-orange {
   color: #f26522 !important;
 }
+
+
+.btn-outline-orange {
+  color: #ff6b00;
+  border: 1px solid #ff6b00;
+}
+
+.btn-outline-orange:hover {
+  background-color: #ff6b00;
+  color: white;
+}
+
+.text-orange {
+  color: #ff6b00;
+}
+
+.border-orange {
+  border-color: #ff6b00 !important;
+}

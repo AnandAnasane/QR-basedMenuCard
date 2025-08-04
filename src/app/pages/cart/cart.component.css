@@ -1,4 +1,4 @@
-.btn-orange {
+/* .btn-orange {
   background-color: #f26522;
   color: white;
   border: none;
@@ -6,4 +6,84 @@
 
 .btn-orange:hover {
   background-color: #f26522;
+} */
+.cart-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50vh;
+  background-color: #fff;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  z-index: 1055;
+  overflow-y: auto;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 4px 10px;
+  font-size: 20px;
+  line-height: 1;
+  z-index: 1060;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.veg-icon, .non-veg-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  border: 1px solid;
+  margin-top: 5px;
+}
+
+.veg-icon {
+  background-color: green;
+  border-color: green;
+}
+
+.non-veg-icon {
+  background-color: red;
+  border-color: red;
+}
+
+.btn-outline-orange {
+  color: #ff6b00;
+  border: 1px solid #ff6b00;
+}
+
+.btn-outline-orange:hover {
+  background-color: #ff6b00;
+  color: white;
+}
+
+.text-orange {
+  color: #ff6b00 !important;
+}
+
+.cart-footer {
+  background-color: #ff6b00;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }

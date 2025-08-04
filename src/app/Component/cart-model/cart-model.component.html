@@ -1,5 +1,5 @@
 <!-- Bottom Modal -->
-<div class="bottom-modal shadow-lg" *ngIf="isVisible">
+<div class="bottom-modal shadow-lg" *ngIf="isVisible && cartCount > 0">
   <div class="d-flex justify-content-between align-items-center p-3">
     <div style="color: #ff6b00;">
       {{ cartCount }} Item{{ cartCount > 1 ? 's' : '' }} in cart
@@ -24,3 +24,11 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+

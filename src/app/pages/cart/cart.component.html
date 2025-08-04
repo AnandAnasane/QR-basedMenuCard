@@ -1,60 +1,76 @@
-<app-heading></app-heading>
+<div class="container my-4 p-4 rounded shadow bg-white position-relative" style="max-width: 600px;">
 
-<div class="container my-4">
-  <h4 class="mb-3">Your Cart</h4>
+  <!-- Close Button (Top Right) -->
+  <button (click)="onClose()" 
+          class="btn position-absolute top-0 end-0 m-3 p-0" 
+          style="background: none; border: none;">
+    <span style="font-size: 1.5rem; color: #888;">&times;</span>
+  </button>
 
-  <!-- Back to Menu button -->
-  <div class="mb-3">
-    <a routerLink="/menu" class="btn btn-outline-secondary">
-      ← Back to Menu
-    </a>
-  </div>
+  <!-- Heading -->
+  <h4 class="text-center fw-bold mb-4" style="color: #ff6b00;">Your Order Summary</h4>
 
-  <div *ngIf="cartItems.length === 0" class="text-center py-5">
+  <!-- Empty Cart Message -->
+  <div *ngIf="cartItems.length === 0" class="text-center py-5 text-muted">
     <p>Your cart is empty.</p>
   </div>
 
-  <div *ngIf="cartItems.length > 0">
-    <div *ngFor="let item of cartItems" class="d-flex justify-content-between align-items-center border-bottom py-3">
+  <!-- Cart Items -->
+  <div *ngIf="cartItems.length > 0" class="cart-items">
+    <div *ngFor="let item of cartItems" 
+         class="d-flex justify-content-between align-items-start border-bottom py-3">
+
+      <!-- Left: Item Name & Veg/Non-Veg Dot -->
       <div class="d-flex align-items-center">
-        <img 
-          [src]="item.image || 'assets/default-image.png'" 
-          alt="{{ item.name }}" 
-          class="rounded" 
-          style="width: 60px; height: 60px; object-fit: cover;">
-        <div class="ms-3">
-          <h6 class="mb-1">{{ item.name }}</h6>
-          <p class="mb-0">₹{{ item.price || 0 }}</p>
+        <!-- Veg/Non-Veg Indicator (Optional) -->
+        <!-- 
+        <div [ngClass]="{'bg-success': item.isVeg, 'bg-danger': !item.isVeg}" 
+             class="rounded-circle me-2" 
+             style="width: 10px; height: 10px; border: 1px solid #000;"></div>
+        -->
+        <div class="ms-1">
+          <h6 class="mb-0 fw-semibold">{{ item.name }}</h6>
         </div>
       </div>
 
-      <div class="d-flex align-items-center">
-        <button (click)="decreaseQty(item)" class="btn btn-outline-orange border btn-sm px-2 py-0">-</button>
-        <span class="mx-2">{{ item.quantity }}</span>
-        <button (click)="increaseQty(item)" class="btn btn-outline-orange border btn-sm px-2 py-0">+</button>
-      </div>
-
-      <div>
-        ₹{{ (item.price * item.quantity) || 0 }}
-      </div>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center mt-4">
-      <h5>Total:</h5>
-      <h5>₹{{ totalPrice }}</h5>
-    </div>
-
-    <!-- place-order.component.html -->
-<div class="mt-3 text-end">
-  <button (click)="openOtpStep()" class="btn btn-orange">Place Order</button>
-</div>
-
-
-    <!-- <div class="mt-3 text-end">
-      <button routerLink="/order" class="btn btn-orange">Place Order</button>
-    </div> -->
+      <!-- Right: Quantity Controls & Price -->
+      <div class="text-end">
+        <div class="d-flex justify-content-end align-items-center mb-1">
+  <div class="d-flex align-items-center border rounded px-2 py-1" style="gap: 0.5rem;">
+    <button (click)="decreaseQty(item)" 
+            class="btn btn-outline-orange btn-sm px-2 py-0 border-0">
+      −
+    </button>
+    <span class="fw-medium">{{ item.quantity }}</span>
+    <button (click)="increaseQty(item)" 
+            class="btn btn-outline-orange btn-sm px-2 py-0 border-0">
+      +
+    </button>
   </div>
 </div>
+
+        <div class="text-muted fw-semibold">
+          ₹{{ (item.price * item.quantity) || 0 }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Subtotal & Place Order -->
+    <div class="d-flex justify-content-between align-items-center mt-4 p-3 rounded" 
+         style="background-color: #fff5f0;">
+      <div>
+        <h6 class="mb-1 text-muted">SUBTOTAL</h6>
+        <h5 class="fw-bold mb-0">₹{{ totalPrice }}</h5>
+      </div>
+      <button (click)="openOtpStep()" 
+              class="btn fw-semibold" 
+              style="background-color: #fff; color: #ff6b00; border: 1px solid #ff6b00;">
+        Place Order
+      </button>
+    </div>
+  </div>
+</div>
+
 
 
 
@@ -86,4 +102,3 @@
     </div>
   </div>
 </div>
-

@@ -177,9 +177,7 @@ export class MenuComponent implements OnInit  {
     this.isVisible = visible;
   });
 
-  // ✅ Show modal if previously visible
   if (wasVisible) {
-    // Delay it just a bit to allow view to fully load
     setTimeout(() => {
       this.bottomModal?.showModal(this.cartCount);
     }, 0);
