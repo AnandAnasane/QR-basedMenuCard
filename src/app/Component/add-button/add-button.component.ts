@@ -41,7 +41,8 @@ export class AddButtonComponent implements OnInit, OnDestroy {
       price: Number(this.itemPrice),
       image: this.itemImage,
       quantity: 1,
-      type: undefined
+      type: undefined,
+      veg: undefined
     });
     this.itemAddedToCart.emit();
   }

@@ -4,12 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { initializeApp } from 'firebase/app';
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-  ConfirmationResult
-} from 'firebase/auth';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
 import { environment } from '../../env/environment';
 
 declare var bootstrap: any;
@@ -35,9 +30,11 @@ export class CartComponent implements OnInit {
   timerInterval: any;
   isVerified: boolean = false;
 
-  confirmationResult!: ConfirmationResult;
   auth = getAuth();
-  recaptchaVerifier!: RecaptchaVerifier;
+  cartItemsSubject: any;
+
+  // ✅ OTP message visibility flag
+  otpMessageVisible: boolean = false;
 
   constructor(private cartService: CartService, private router: Router) {
     initializeApp(environment.firebase);
@@ -48,8 +45,6 @@ export class CartComponent implements OnInit {
       this.cartItems = items;
       this.calculateTotal();
     });
-
-    this.renderRecaptcha();
   }
 
   calculateTotal() {
@@ -80,69 +75,77 @@ export class CartComponent implements OnInit {
     otpModal.show();
   }
 
-  renderRecaptcha() {
-    this.recaptchaVerifier = new RecaptchaVerifier(
-      this.auth,
-      'recaptcha-container',
-      {
-        size: 'invisible',
-        callback: (response: any) => {
-          this.sendOtp(); // Automatically called if reCAPTCHA passes
-        }
-      }
-    );
-
-    // Attach to window so Firebase can access it internally
-    (window as any).recaptchaVerifier = this.recaptchaVerifier;
-
-    this.recaptchaVerifier.render().then((widgetId: any) => {
-      console.log('reCAPTCHA rendered with widget ID:', widgetId);
-    });
-  }
-
   sendOtp() {
-    const fullPhoneNumber = '+91' + this.mobileNumber;
-
-    signInWithPhoneNumber(this.auth, fullPhoneNumber, this.recaptchaVerifier)
-      .then((confirmationResult) => {
-        this.confirmationResult = confirmationResult;
-        this.otpSent = true;
-        this.showResend = false;
-        this.countdown = 15;
-        this.startCountdown();
+    fetch('http://localhost:3000/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: '+91' + this.mobileNumber })
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          this.otpSent = true;
+          this.otpMessageVisible = true; // ✅ Show OTP sent message
+          this.showResend = false;
+          this.startCountdown();
+        }
       })
-      .catch((error) => {
-        console.error('Error during signInWithPhoneNumber:', error);
-        alert('Failed to send OTP. Please check your number or try again.');
+      .catch(err => {
+        console.error('OTP Send Error', err);
+        alert('Failed to send OTP');
       });
   }
 
   startCountdown() {
     if (this.timerInterval) clearInterval(this.timerInterval);
 
+    this.countdown = 15;
+    this.showResend = false;
+
     this.timerInterval = setInterval(() => {
       this.countdown--;
       if (this.countdown <= 0) {
         clearInterval(this.timerInterval);
         this.showResend = true;
+
+        this.otpMessageVisible = false; // ✅ Auto-hide OTP sent message after timer
       }
     }, 1000);
   }
 
   resendOtp() {
-    this.sendOtp();
+    this.otpMessageVisible = false; // ✅ Hide OTP message on manual resend
+    this.sendOtp(); // This will reset everything and resend OTP
   }
 
   verifyOtp() {
-    this.confirmationResult.confirm(this.otp)
-      .then((result) => {
+    fetch('http://localhost:3000/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: '+91' + this.mobileNumber, otp: this.otp })
+    })
+      .then(res => res.json())
+      .then(async res => {
+        const auth = getAuth();
+        await signInWithCustomToken(auth, res.token);
         this.isVerified = true;
-        clearInterval(this.timerInterval);
-        alert('OTP verified successfully!');
+
+        // Optional: Clear cart after placing order
+        this.cartService.clearCart();
+
+        // Show success message for 2 seconds, then redirect
+        setTimeout(() => {
+          this.router.navigate(['/order']);
+        }, 2000);
       })
-      .catch((error) => {
-        console.error('OTP verification failed:', error);
-        alert('Invalid OTP. Please try again.');
+      .catch(err => {
+        console.error('OTP verification failed:', err);
+        alert('Invalid OTP');
       });
+  }
+
+  clearCart() {
+    this.cartItemsSubject.next([]);
+    localStorage.removeItem('cart');
   }
 }

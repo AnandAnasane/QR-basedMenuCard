@@ -42,11 +42,14 @@
       <div>
         <h6 class="mb-1 text-muted">SUBTOTAL</h6>
         <h5 class="fw-bold mb-0">₹{{ totalPrice }}</h5>
+        <small class="text-muted" style="font-size: 12px;">*Extra charges may apply</small>
       </div>
-      <button (click)="openOtpStep()" class="btn fw-semibold" style="background-color: #fff; color: #ff6b00; border: 1px solid #ff6b00;">
+      <button (click)="openOtpStep()" class="btn fw-semibold"
+        style="background-color: #fff; color: #ff6b00; border: 1px solid #ff6b00;">
         Place Order
       </button>
     </div>
+
   </div>
 </div>
 
@@ -60,8 +63,8 @@
       </div>
 
       <div class="modal-body">
-        <!-- Firebase reCAPTCHA container -->
-        <div id="recaptcha-container"></div>
+
+
 
         <!-- Step 1: Name + Phone Input -->
         <div *ngIf="!otpSent">
@@ -76,37 +79,31 @@
 
         <!-- Step 2: OTP Verification -->
         <div *ngIf="otpSent && !isVerified">
-          <div class="alert alert-success p-2 d-flex align-items-center mb-3"
+          <div *ngIf="otpMessageVisible" class="alert alert-success p-2 d-flex align-items-center mb-3"
             style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
             ✅ OTP sent to {{ mobileNumber }}
           </div>
 
+
           <label class="form-label">Enter OTP</label>
           <input [(ngModel)]="otp" class="form-control mb-2" type="text" placeholder="Enter OTP" />
 
-          <button
-            class="btn w-100 mt-2"
-            [ngClass]="showResend ? 'btn-orange' : 'btn-success'"
-            (click)="showResend ? resendOtp() : verifyOtp()"
-          >
+          <button class="btn w-100 mt-2" [ngClass]="showResend ? 'btn-orange' : 'btn-success'"
+            (click)="showResend ? resendOtp() : verifyOtp()">
             {{ showResend ? 'Resend OTP' : 'Verify OTP' }}
           </button>
 
           <!-- Countdown Timer -->
           <div class="text-center text-muted mt-2" *ngIf="!showResend">
-            Resend OTP in {{ countdown < 10 ? '0' + countdown : countdown }}s
+            Resend OTP in {{ countdown < 10 ? '0' + countdown : countdown }}s </div>
           </div>
-        </div>
 
-        <!-- ✅ Success after verification -->
-        <div *ngIf="isVerified" class="alert alert-success mt-3 text-center">
-          ✅ Phone number verified successfully!
+          <!-- ✅ Success after verification -->
+          <div *ngIf="isVerified" class="alert alert-success mt-3 text-center">
+            Order Placed Successfully!
+          </div>
+
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
-<!-- This div is needed for reCAPTCHA -->
-<div id="recaptcha-container"></div>
