@@ -50,6 +50,21 @@
       </button>
     </div>
 
+    <!-- Order More Button -->
+    <!-- <div class="text-center mt-3">
+      <button routerLink="/menu" class="btn btn-link text-decoration-none text-muted fw-medium">
+        ← Order More Items
+      </button>
+    </div> -->
+
+    <!-- Order More Button -->
+    <div class="text-center mt-3">
+      <button routerLink="/menu" class="btn fw-semibold px-4 py-2"
+        style="background-color: #fff5f0; color: #ff6b00; border: 1px solid #ff6a0085; border-radius: 0.5rem;">
+        ← Order More Items
+      </button>
+    </div>
+
   </div>
 </div>
 
@@ -64,19 +79,18 @@
 
       <div class="modal-body">
 
-
-
         <!-- Step 1: Name + Phone Input -->
         <div *ngIf="!otpSent">
           <label class="form-label">Name</label>
-          <input [(ngModel)]="userName" class="form-control mb-2" type="text" placeholder="Enter your name" />
+          <input [(ngModel)]="userName" class="form-control mb-1" type="text" placeholder="Enter your name" />
+          <div *ngIf="nameError" class="text-danger small mb-2">{{ nameError }}</div>
 
           <label class="form-label">Mobile Number</label>
-          <input [(ngModel)]="mobileNumber" class="form-control mb-2" type="text" placeholder="Mobile Number" />
+          <input [(ngModel)]="mobileNumber" class="form-control mb-1" type="text" placeholder="Mobile Number" />
+          <div *ngIf="mobileError" class="text-danger small mb-2">{{ mobileError }}</div>
 
           <button class="btn btn-orange w-100 mt-2" (click)="sendOtp()">Send OTP</button>
         </div>
-
         <!-- Step 2: OTP Verification -->
         <div *ngIf="otpSent && !isVerified">
           <div *ngIf="otpMessageVisible" class="alert alert-success p-2 d-flex align-items-center mb-3"
@@ -84,9 +98,14 @@
             ✅ OTP sent to {{ mobileNumber }}
           </div>
 
-
+          <!-- OTP Input -->
           <label class="form-label">Enter OTP</label>
           <input [(ngModel)]="otp" class="form-control mb-2" type="text" placeholder="Enter OTP" />
+
+          <!-- 🔴 Error Message in red -->
+          <div *ngIf="otpErrorMessage" class="text-danger mb-2" style="font-size: 14px;">
+            {{ otpErrorMessage }}
+          </div>
 
           <button class="btn w-100 mt-2" [ngClass]="showResend ? 'btn-orange' : 'btn-success'"
             (click)="showResend ? resendOtp() : verifyOtp()">
@@ -97,12 +116,10 @@
           <div class="text-center text-muted mt-2" *ngIf="!showResend">
             Resend OTP in {{ countdown < 10 ? '0' + countdown : countdown }}s </div>
           </div>
-
           <!-- ✅ Success after verification -->
           <div *ngIf="isVerified" class="alert alert-success mt-3 text-center">
             Order Placed Successfully!
           </div>
-
         </div>
       </div>
     </div>

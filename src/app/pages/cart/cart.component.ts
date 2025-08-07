@@ -12,7 +12,7 @@ declare var bootstrap: any;
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
 })
@@ -30,11 +30,15 @@ export class CartComponent implements OnInit {
   timerInterval: any;
   isVerified: boolean = false;
 
+  otpMessageVisible: boolean = false;
+  otpErrorMessage: string = ''; // ✅ For red error message
+
   auth = getAuth();
   cartItemsSubject: any;
 
-  // ✅ OTP message visibility flag
-  otpMessageVisible: boolean = false;
+  nameError: string = '';
+  mobileError: string = '';
+
 
   constructor(private cartService: CartService, private router: Router) {
     initializeApp(environment.firebase);
@@ -76,6 +80,27 @@ export class CartComponent implements OnInit {
   }
 
   sendOtp() {
+    // Reset error messages
+    this.nameError = '';
+    this.mobileError = '';
+
+    // Validate name
+    if (!this.userName || this.userName.trim().length < 2) {
+      this.nameError = 'Please enter a valid name (at least 2 characters).';
+    }
+
+    // Validate mobile number
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(this.mobileNumber)) {
+      this.mobileError = 'Enter a valid 10-digit Valid number.';
+    }
+
+    // Stop if any error
+    if (this.nameError || this.mobileError) {
+      return;
+    }
+
+    // Proceed to send OTP
     fetch('http://localhost:3000/send-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -85,16 +110,19 @@ export class CartComponent implements OnInit {
       .then(res => {
         if (res.success) {
           this.otpSent = true;
-          this.otpMessageVisible = true; // ✅ Show OTP sent message
+          this.otpMessageVisible = true;
+          this.otpErrorMessage = '';
           this.showResend = false;
           this.startCountdown();
         }
       })
       .catch(err => {
         console.error('OTP Send Error', err);
-        alert('Failed to send OTP');
+        this.otpErrorMessage = 'Failed to send OTP. Please try again.';
       });
   }
+
+
 
   startCountdown() {
     if (this.timerInterval) clearInterval(this.timerInterval);
@@ -107,15 +135,15 @@ export class CartComponent implements OnInit {
       if (this.countdown <= 0) {
         clearInterval(this.timerInterval);
         this.showResend = true;
-
-        this.otpMessageVisible = false; // ✅ Auto-hide OTP sent message after timer
+        this.otpMessageVisible = false;
       }
     }, 1000);
   }
 
   resendOtp() {
-    this.otpMessageVisible = false; // ✅ Hide OTP message on manual resend
-    this.sendOtp(); // This will reset everything and resend OTP
+    this.otpMessageVisible = false;
+    this.otpErrorMessage = ''; // ✅ Clear error on resend
+    this.sendOtp();
   }
 
   verifyOtp() {
@@ -129,18 +157,17 @@ export class CartComponent implements OnInit {
         const auth = getAuth();
         await signInWithCustomToken(auth, res.token);
         this.isVerified = true;
+        this.otpErrorMessage = ''; // ✅ Clear any old error
 
-        // Optional: Clear cart after placing order
         this.cartService.clearCart();
 
-        // Show success message for 2 seconds, then redirect
         setTimeout(() => {
           this.router.navigate(['/order']);
         }, 2000);
       })
       .catch(err => {
         console.error('OTP verification failed:', err);
-        alert('Invalid OTP');
+        this.otpErrorMessage = 'Invalid OTP. Please try again.'; // ✅ Set red error message
       });
   }
 
