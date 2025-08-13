@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 export interface CartItem {
-veg: any;
-type: any;
+  veg: any;
+  type: any;
   id: string;
   name: string;
   price: number;
@@ -22,18 +22,43 @@ export class CartService {
   private cartNotEmptySubject = new BehaviorSubject<boolean>(false);
   cartNotEmpty$ = this.cartNotEmptySubject.asObservable(); 
 
-   private cartVisibleSubject = new BehaviorSubject<boolean>(false);
+  private cartVisibleSubject = new BehaviorSubject<boolean>(false);
   cartVisible$ = this.cartVisibleSubject.asObservable();
 
-   setCartModalVisible(value: boolean) {
+  constructor() {
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      const parsedCart: CartItem[] = JSON.parse(savedCart);
+      this.cartItemsSubject.next(parsedCart);
+      this.updateCartState();
+    }
+
+    // Restore cart modal visibility state
+    const savedVisibility = localStorage.getItem('cartModelVisible');
+    if (savedVisibility === '1' && this.cartItemsSubject.getValue().length > 0) {
+      this.cartVisibleSubject.next(true);
+    }
+  }
+
+  getCart(): CartItem[] {
+    return this.cartItemsSubject.getValue();
+  }
+
+  getTotal(): number {
+    return this.cartItemsSubject
+      .getValue()
+      .reduce((total, item) => total + (item.price * item.quantity), 0);
+  }
+
+  setCartModalVisible(value: boolean) {
     this.cartVisibleSubject.next(value);
-    localStorage.setItem('cartModelVisible', value ? '1' : '0')
+    localStorage.setItem('cartModelVisible', value ? '1' : '0');
   }
 
   getCurrentVisibility(): boolean {
     return localStorage.getItem('cartModelVisible') === '1';
   }
-
 
   addToCart(item: CartItem) {
     const currentItems = this.cartItemsSubject.getValue();
@@ -44,7 +69,9 @@ export class CartService {
       currentItems.push({ ...item, quantity: 1 });
     }
     this.cartItemsSubject.next(currentItems);
-    this.updateCartState(); 
+    this.saveCart();
+    this.updateCartState();
+    this.setCartModalVisible(true); // show modal when item added
   }
 
   increaseQty(itemId: string) {
@@ -52,6 +79,7 @@ export class CartService {
     const item = currentItems.find(i => i.id === itemId);
     if (item) item.quantity += 1;
     this.cartItemsSubject.next(currentItems);
+    this.saveCart();
     this.updateCartState(); 
   }
 
@@ -66,6 +94,7 @@ export class CartService {
       }
     }
     this.cartItemsSubject.next(currentItems);
+    this.saveCart();
     this.updateCartState();
   }
 
@@ -73,6 +102,7 @@ export class CartService {
     const currentItems = this.cartItemsSubject.getValue();
     const updatedItems = currentItems.filter(item => item.id !== itemId);
     this.cartItemsSubject.next(updatedItems);
+    this.saveCart();
     this.updateCartState();
   }
 
@@ -86,9 +116,11 @@ export class CartService {
     return this.cartItemsSubject.getValue();
   }
 
-   clearCart(){
+  clearCart() {
     this.cartItemsSubject.next([]);
+    this.saveCart();
     this.updateCartState();
+    this.setCartModalVisible(false);
   }
 
   private updateCartState() {
@@ -96,6 +128,7 @@ export class CartService {
     this.cartNotEmptySubject.next(currentItems.length > 0);
   }
 
- 
+  private saveCart() {
+    localStorage.setItem('cartItems', JSON.stringify(this.cartItemsSubject.getValue()));
+  }
 }
-

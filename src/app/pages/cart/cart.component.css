@@ -73,3 +73,18 @@
 .btn-close-white:hover {
   background-color: #ffe2cc;
 }
+
+
+
+
+.resend-link {
+  color: #ff6600;      
+
+  text-decoration: none;  
+  transition: color 0.2s ease-in-out;
+}
+
+.resend-link:hover {
+  color: #cc5200;        
+  text-decoration: underline;
+}

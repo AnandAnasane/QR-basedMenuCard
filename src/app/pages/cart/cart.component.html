@@ -1,11 +1,12 @@
 <div class="container my-4 p-4 rounded shadow bg-white position-relative" style="max-width: 600px;">
   <!-- Close Button -->
-  <button (click)="onClose()" class="btn position-absolute top-0 end-0 m-3 p-0" style="background: none; border: none;">
+  <button id="cartButton" (click)="onClose()" class="btn position-absolute top-0 end-0 m-3 p-0"
+    style="background: none; border: none;">
     <span style="font-size: 1.5rem; color: #888;">&times;</span>
   </button>
 
   <!-- Heading -->
-  <h4 class="text-center fw-bold mb-4" style="color: #ff6b00;">Your Order Summary</h4>
+  <h4 class="text-center fw-bold mb-4 text-orange">Your Order Summary</h4>
 
   <!-- Empty Cart Message -->
   <div *ngIf="cartItems.length === 0" class="text-center py-5 text-muted">
@@ -13,16 +14,13 @@
   </div>
 
   <!-- Cart Items -->
-  <div *ngIf="cartItems.length > 0" class="cart-items">
+  <div *ngIf="cartItems.length > 0">
     <div *ngFor="let item of cartItems" class="d-flex justify-content-between align-items-start border-bottom py-3">
-      <!-- Item Info -->
       <div class="d-flex align-items-center">
         <div class="ms-1">
           <h6 class="mb-0 fw-semibold">{{ item.name }}</h6>
         </div>
       </div>
-
-      <!-- Quantity & Price -->
       <div class="text-end">
         <div class="d-flex justify-content-end align-items-center mb-1">
           <div class="d-flex align-items-center border rounded px-2 py-1" style="gap: 0.5rem;">
@@ -32,7 +30,7 @@
           </div>
         </div>
         <div class="text-muted fw-semibold">
-          ₹{{ (item.price * item.quantity) || 0 }}
+          ₹{{ item.price * item.quantity }}
         </div>
       </div>
     </div>
@@ -42,85 +40,146 @@
       <div>
         <h6 class="mb-1 text-muted">SUBTOTAL</h6>
         <h5 class="fw-bold mb-0">₹{{ totalPrice }}</h5>
-        <small class="text-muted" style="font-size: 12px;">*Extra charges may apply</small>
+        <small class="text-muted">*Extra charges may apply</small>
       </div>
-      <button (click)="openOtpStep()" class="btn fw-semibold"
-        style="background-color: #fff; color: #ff6b00; border: 1px solid #ff6b00;">
-        Place Order
-      </button>
+      <div class="d-flex flex-column align-items-end gap-2">
+        <button (click)="placeOrder()" class="btn btn-outline-orange fw-semibold">
+          Place Order
+        </button>
+        <!-- Order More Button -->
+        <button routerLink="/menu" class="btn btn-orange fw-semibold px-3">
+          Order More
+        </button>
+      </div>
     </div>
-
-    <!-- Order More Button -->
-    <!-- <div class="text-center mt-3">
-      <button routerLink="/menu" class="btn btn-link text-decoration-none text-muted fw-medium">
-        ← Order More Items
-      </button>
-    </div> -->
-
-    <!-- Order More Button -->
-    <div class="text-center mt-3">
-      <button routerLink="/menu" class="btn fw-semibold px-4 py-2"
-        style="background-color: #fff5f0; color: #ff6b00; border: 1px solid #ff6a0085; border-radius: 0.5rem;">
-        ← Order More Items
-      </button>
-    </div>
-
   </div>
 </div>
 
-<!-- OTP Modal -->
-<div class="modal fade" id="otpModal" tabindex="-1">
+<!-- First Modal: Name + Mobile + Send OTP -->
+<div class="modal fade" id="firstModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content otp-modal-content p-3">
+    <div class="modal-content p-3">
       <div class="modal-header border-0">
-        <h5 class="modal-title">Customer Verification</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title fw-bold text-orange">Enter Your Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-
       <div class="modal-body">
+        <form #customerForm="ngForm" novalidate>
 
-        <!-- Step 1: Name + Phone Input -->
-        <div *ngIf="!otpSent">
-          <label class="form-label">Name</label>
-          <input [(ngModel)]="userName" class="form-control mb-1" type="text" placeholder="Enter your name" />
-          <div *ngIf="nameError" class="text-danger small mb-2">{{ nameError }}</div>
+          <!-- Name -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Name</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="customerName"
+              placeholder="Enter your name" required minlength="3" #name="ngModel">
+            <div class="text-danger small mt-1" *ngIf="name.invalid && name.touched">
+              <span *ngIf="name.errors?.['required']">Name is required.</span>
+              <span *ngIf="name.errors?.['minlength']">Name must be at least 3 characters.</span>
+            </div>
+          </div>
 
-          <label class="form-label">Mobile Number</label>
-          <input [(ngModel)]="mobileNumber" class="form-control mb-1" type="text" placeholder="Mobile Number" />
-          <div *ngIf="mobileError" class="text-danger small mb-2">{{ mobileError }}</div>
+          <!-- Mobile Number -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Mobile Number</label>
+            <input type="tel" class="form-control" name="mobile" [(ngModel)]="customerMobile"
+              placeholder="Enter your mobile number" pattern="^[0-9]{10}$" required #mobile="ngModel">
+            <div class="text-danger small mt-1" *ngIf="mobile.invalid && mobile.touched">
+              <span *ngIf="mobile.errors?.['required']">Mobile number is required.</span>
+              <span *ngIf="mobile.errors?.['pattern']">Enter a valid 10-digit mobile number.</span>
+            </div>
+          </div>
 
-          <button class="btn btn-orange w-100 mt-2" (click)="sendOtp()">Send OTP</button>
+          <!-- Send OTP Button -->
+          <div class="d-grid">
+            <button type="button" class="btn btn-orange fw-semibold"
+              [disabled]="customerForm.invalid"
+              (click)="sendOtp()">
+              Send OTP
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Second Modal: Customer Info with OTP -->
+<div class="modal fade" id="orderModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-orange">Customer Information</h5>
+        <button type="button" class="btn-close" (click)="closeOrderModal()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Success Message -->
+        <div *ngIf="otpSent" class="alert alert-success mb-3 d-flex align-items-center">
+          <i class="bi bi-info-circle me-2"></i>
+          *OTP has been sent to your Mobile Number.
         </div>
-        <!-- Step 2: OTP Verification -->
-        <div *ngIf="otpSent && !isVerified">
-          <div *ngIf="otpMessageVisible" class="alert alert-success p-2 d-flex align-items-center mb-3"
-            style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
-            ✅ OTP sent to {{ mobileNumber }}
-          </div>
 
-          <!-- OTP Input -->
-          <label class="form-label">Enter OTP</label>
-          <input [(ngModel)]="otp" class="form-control mb-2" type="text" placeholder="Enter OTP" />
+        <!-- OTP Input -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Enter OTP</label>
+          <input type="text" class="form-control"
+                 placeholder="Enter OTP"
+                 [(ngModel)]="enteredOtp"
+                 name="otp"
+                 autocomplete="one-time-code"
+                 inputmode="numeric"
+                 maxlength="6">
+        </div>
 
-          <!-- 🔴 Error Message in red -->
-          <div *ngIf="otpErrorMessage" class="text-danger mb-2" style="font-size: 14px;">
-            {{ otpErrorMessage }}
-          </div>
-
-          <button class="btn w-100 mt-2" [ngClass]="showResend ? 'btn-orange' : 'btn-success'"
-            (click)="showResend ? resendOtp() : verifyOtp()">
-            {{ showResend ? 'Resend OTP' : 'Verify OTP' }}
+        <!-- Confirm & Timer in Same Row -->
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap">
+          <!-- Confirm Button -->
+          <button type="button" class="btn btn-orange fw-semibold me-3 px-5"
+                  (click)="verifyOtp()"
+                  [disabled]="!enteredOtp || enteredOtp.length < 4">
+            Confirm
           </button>
 
-          <!-- Countdown Timer -->
-          <div class="text-center text-muted mt-2" *ngIf="!showResend">
-            Resend OTP in {{ countdown < 10 ? '0' + countdown : countdown }}s </div>
-          </div>
-          <!-- ✅ Success after verification -->
-          <div *ngIf="isVerified" class="alert alert-success mt-3 text-center">
-            Order Placed Successfully!
+          <!-- Timer & Resend -->
+          <div class="text-muted">
+            <span *ngIf="countdown > 0">Resend OTP in {{ countdown }}s</span>
+            <a *ngIf="countdown === 0" href="#" (click)="resendOtp($event)" class="resend-link">
+              Resend OTP
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+
+
+<!-- Success Modal -->
+<!-- <div class="modal fade" id="successModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3 text-center">
+      <div class="modal-body">
+        <div class="alert alert-success mb-0 fw-semibold">
+          🎉 Order placed successfully!
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="modal fade" id="errorModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="alert alert-danger mb-0 fw-semibold text-center w-100 m-0">
+      ❌ {{ errorMessage }}
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="alert alert-success mb-0 fw-semibold text-center w-100 m-0">
+      🎉 Order placed successfully!
+    </div>
+  </div>
+</div>
+
